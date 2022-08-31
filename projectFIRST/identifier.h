@@ -41,7 +41,7 @@ public:
     // returns the ratio of to/from double
     double GetRatio();
     
-    bool CheckLeaf();
+    void CheckLeaf();
 
 };
 
@@ -53,9 +53,10 @@ Identifier::Identifier(string name){
 
 //Ratio Implementation 
 double Identifier::GetRatio(){
-    if (from =! 0){
+    if (from != 0){
     
-    return (double)to/from; 
+    
+    return to/(from * 1.0 )   ; 
 
     }
     else{
@@ -64,14 +65,12 @@ double Identifier::GetRatio(){
 }
 
 //Check Leaf Implementation
-bool Identifier:: CheckLeaf(){
+void Identifier:: CheckLeaf(){
     
     if ( (to == 0 && from != 0) || (to != 0 && from == 0) ){
-        return true ;
+        isLeaf = true;
+ 
     }
-    
-    return false; 
-
 }
 
 ////////////////////////////////////////////////////////////////////////SUPER VECTOR CLASS DEF//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -197,7 +196,7 @@ bool SuperIdentifier::hasObject(string name) const{
 
 }
 
-
+// Overloaded Operator
 SuperIdentifier& SuperIdentifier::operator<<(tempID ID){
 
     int firstIndex = this->where(ID.name1);
