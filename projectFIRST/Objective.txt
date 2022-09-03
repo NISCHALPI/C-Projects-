@@ -1,0 +1,80 @@
+#####################################CAN ONLY USE FOLLOWING LIBRARY###########################
+iostream
+fstream
+sstream
+iomanip
+string
+cctype
+
+###############################################################################################
+
+
+
+
+
+You are given a file representing a network. Each line of the file contains three values:
+
+Source Network Identifier
+Destination Network Identifier
+Bandwidth available (in Mb/s) from the source identifier to the destination identifier (an integer value)
+
+################################################################################################
+
+The identifiers:
+
+can appear multiple times as both sources and destinations
+contain only letters and numbers and are not case sensitive
+The identifiers can be only digits or only letters, e.g. 123 and abc are both valid identifiers.
+
+###############################################################################################
+
+
+Your program should accept two command-line arguments:
+
+The input filename
+The output filename
+
+
+Your program should write all output to a file. Output a list of the unique identifiers in order of appearance in all uppercase.
+
+###############################################################################################
+
+A leaf identifier in the network is an identifier that only appears as a source identifier or one that only appears as a destination identifier. For all non-leaf identifiers, output:
+
+the identifier in all uppercase
+the sum of the bandwidth "from" that identifier
+the sum of the bandwidth "to" that identifier
+the ratio of the "to"/"from" as a two decimal point double
+
+################################################################################################
+
+Example
+input1.txt
+
+TCLDCR01 TCLCOT00 1000
+TCLDCS02 TCLcot00 2000
+northdat00 TCLCOT01 1000
+NORTHREM1 NORTHDAT00 300
+tclcot00 alat0 1000
+COKREM2 NORTHDAT00 100
+TCLCOT01 ALAT0 1000
+TCLCOT00 BNG4 1000
+
+Run command: ./a.out input1.txt output.txt
+
+output.txt
+
+TCLDCR01
+TCLCOT00
+TCLDCS02
+NORTHDAT00
+TCLCOT01
+NORTHREM1
+ALAT0
+COKREM2
+BNG4
+
+TCLCOT00 2000 3000 1.50
+NORTHDAT00 1000 400 0.40
+TCLCOT01 1000 1000 1.00
+################################################################################################
