@@ -11,7 +11,7 @@
 
 bool checkIdentier(tempID& temp){
     
-    for (int i =0 ; i< temp.name1.size(); i++){
+    for (int i =0 ; i< (int)temp.name1.size(); i++){
         if(!(isalnum(temp.name1.at(i)))){
             return false ;
         }
@@ -19,7 +19,7 @@ bool checkIdentier(tempID& temp){
             temp.name1.at(i) =toupper(temp.name1.at(i));
         }
     }
-    for (int i =0 ; i< temp.name2.size(); i++){
+    for (int i =0 ; i< (int) temp.name2.size(); i++){
         if(!(isalnum(temp.name2.at(i)))){
             return false ;
         }
@@ -64,7 +64,7 @@ void readData(string filename, SuperIdentifier& list){
             parseTemp >> temp.a2b;
         }
         catch (...){
-            cout << "Reading faliure!";
+            cout << "Reading faliure!" << endl;
             exit (EXIT_FAILURE);
         }   
         
@@ -104,11 +104,12 @@ void writeData(string filename , SuperIdentifier& list){
     
     outFS << endl ; 
 
-   
+    outFS << fixed << setprecision(2);
+    
     for (int i = 0; i < list.size; i++){
     
     if ( !list.at(i)->isLeaf ){
-        outFS << fixed << setprecision(2);
+        
         outFS << list.at(i)->name << " " << list.at(i)->from << " " << list.at(i)->to << " " << list.at(i)->GetRatio() << endl;
     }
     }
