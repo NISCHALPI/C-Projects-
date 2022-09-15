@@ -1,5 +1,5 @@
-#ifndef _SELECTION_SORT_LIB_
-#define _SELECTION_SORT_LIB_
+#ifndef __SELECTION_SORT_LIB__
+#define __SELECTION_SORT_LIB__
 
 #include <iostream>
 

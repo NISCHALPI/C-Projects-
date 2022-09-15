@@ -1,7 +1,16 @@
+#ifndef __MERGE_SORT_LIB__
+#define __MERGE_SORT__LIB__
+
 #include <iostream>
 #include <thread>
-#include <random>
-using namespace std;
+#include <cmath>
+
+// Cpu count 
+#define __CPU__COUNT (std::thread::hardware_concurrency())
+
+// Threading Layer calculation
+const int __THREADING_LAYER = (std::ceil(std::log2(__CPU__COUNT))) ;
+
 
 namespace mergesort{
 
@@ -177,7 +186,7 @@ delete [] arrayTemp ;
 
 
 
-void mergeSort(int* array, int start, int end , int depth = 0){
+void mergeSort(int* array, int start, int end , int depth = 0, int __THREADING =__THREADING_LAYER){
 // depth means thread spawn level | i.e. depth =4, threads = 2^4
 // Base case upto leaf of the tree
 if( start == end ){
@@ -186,11 +195,13 @@ if( start == end ){
 // Recursive case 
 else{
 
-   if (depth < 4){
+   // Avoids spwaning threads after a layer 
+   if (depth < __THREADING_LAYER){
    int mid = (start + end) / 2 ;
 
-   std::thread t1(mergeSort, array , start , mid, depth++ );
-   std::thread t2(mergeSort, array, mid + 1 , end, depth++);
+   //Spawn two tree branch threads 
+   std::thread t1(mergeSort, array , start , mid, depth++ , __THREADING_LAYER);
+   std::thread t2(mergeSort, array, mid + 1 , end, depth++, __THREADING_LAYER);
    // Thread Join
    t1.join();
    t2.join(); 
@@ -218,7 +229,7 @@ else{
 
 
 // Tests 
-int main(){
+int main(int argc, char** argv){
 
    int size= 100000000;
 
@@ -231,12 +242,17 @@ int main(){
    
 
 
-
+   if(argc >= 2){
+   threaded_mergesort::mergeSort(arr, 0 , size - 1);
+   }
+   else{
    mergesort::mergeSort(arr, 0 , size - 1 );
-
+   }
   
-   cout << endl;
+   std::cout << __THREADING_LAYER << std::endl;
 
    
 
 }
+
+#endif

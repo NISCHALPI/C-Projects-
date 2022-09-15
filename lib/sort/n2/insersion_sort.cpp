@@ -1,5 +1,5 @@
-#ifndef _INSERSION_SORT_LIB
-#define _INSERSION_SORT_LIB
+#ifndef __INSERSION_SORT_LIB__
+#define __INSERSION_SORT_LIB__
 
 // Runtime complexiy is O(N) for nearly sorted array
 
