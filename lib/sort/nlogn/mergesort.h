@@ -14,12 +14,22 @@
 #include <cmath>
 
 // Cpu count 
+
+#ifndef __CPU__COUNT
 #define __CPU__COUNT (std::thread::hardware_concurrency())
+#endif
+
 
 // Threading Layer calculation
-const int __THREADING_LAYER = (std::ceil(std::log2(__CPU__COUNT))) ;
+#ifndef __THREADING_LAYER_ABS
+#define __THREADING_LAYER_ABS
+
+const int __THREADING_LAYER = (std::ceil(std::log2(__CPU__COUNT)));
+
+#endif
 
 
+// Normal
 namespace mergesort{
 
 template <typename item>
@@ -116,7 +126,7 @@ else{
 
 }
 
-
+// Threaded 
 namespace threaded_mergesort{
 
 void __merge( int* array, int& low , int mid , int& high){
@@ -190,10 +200,6 @@ delete [] arrayTemp ;
 }
 
 
-
-
-
-
 void mergeSort(int* array, int start, int end , int depth = 0, int __THREADING =__THREADING_LAYER){
 // depth means thread spawn level | i.e. depth =4, threads = 2^4
 // Base case upto leaf of the tree
@@ -231,36 +237,7 @@ else{
 
 
 }
-
-
-
-
-
-// Tests 
-int main(int argc, char** argv){
-
-   int size= 100000000;
-
-   int* arr = (int*)malloc(size* sizeof(int));
-
-   for(int i=0; i< size; i++ ){
-      arr[i] = rand() % size ;
-   }
-   
-   
-
-
-   if(argc >= 2){
-   threaded_mergesort::mergeSort(arr, 0 , size - 1);
-   }
-   else{
-   mergesort::mergeSort(arr, 0 , size - 1 );
-   }
-  
-   std::cout << __THREADING_LAYER << std::endl;
-
-   
-
-}
-
 #endif
+
+
+

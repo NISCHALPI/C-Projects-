@@ -13,11 +13,17 @@
 
 
 // Cpu count 
+#ifndef __CPU__COUNT
 #define __CPU__COUNT (std::thread::hardware_concurrency())
+#endif
 
-// Threading Layer calculation
-const int __THREADING_LAYER = (std::ceil(std::log2(__CPU__COUNT))) ;
 
+#ifndef __THREADING_LAYER_ABS
+#define __THREADING_LAYER_ABS
+
+const int __THREADING_LAYER = (std::ceil(std::log2(__CPU__COUNT)));
+
+#endif
 
 //Works with any object with comparision operator 
 namespace quicksort{
@@ -148,31 +154,7 @@ else {
 
 #endif
 
-int main(){
 
-
-
-
-
-int size= 100000000;
-
-   int* arr = (int*)malloc(size* sizeof(int));
-
-   for(int i=0; i< size; i++ ){
-      arr[i] = rand() % size ;
-   }
-
-std::cout << std::endl;
-
-threaded_quicksort::quickSort(arr, 0 , size - 1);
-
-
-std::cout << std::endl;
-free(arr);
-return 0;
-
-}
-   
   
 
    
