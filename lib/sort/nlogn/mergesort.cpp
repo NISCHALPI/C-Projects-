@@ -1,6 +1,14 @@
 #ifndef __MERGE_SORT_LIB__
 #define __MERGE_SORT__LIB__
 
+
+
+
+// Best Case: nlogn
+// Worst Case:: nlogn
+
+// Two namespace : mergesort(stable) and threaded_mergesort(unstable on HPC clusters)
+
 #include <iostream>
 #include <thread>
 #include <cmath>
