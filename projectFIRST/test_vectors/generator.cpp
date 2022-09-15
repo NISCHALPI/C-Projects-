@@ -105,7 +105,7 @@ void randomIdentifier(){
 
     outFS.open("random_string.txt");
 
-    for (int i=0; i<(_MAX_TESTVECTOR/100); i++){
+    for (int i=0; i<(_MAX_TESTVECTOR/10); i++){
 
         outFS << random_string(10) << endl;
     }
