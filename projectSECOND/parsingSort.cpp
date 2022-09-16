@@ -55,6 +55,44 @@ if (argv[1][0] == 'i'){
     }
     
 }
+else if (argv[1][0] == 's'){
+    PseudoVector<string> first;
+    PseudoVector<string> second;
+
+    PseudoVector<string> unique;
+
+    ifstream inFile1(argv[2]);
+    ifstream inFile2(argv[3]);
+
+
+    string temp;
+
+
+    while (!inFile1.fail())
+    {
+        inFile1 >> temp;
+        first.push_back(temp);
+    }
+    
+    while (!inFile2.fail())
+    {
+        inFile2 >> temp;
+        second.push_back(temp);
+    }
+
+    first.sort(false);
+    second.sort(false);
+
+    first.unique(unique);
+
+    for(int i =0 ; i < unique.getSize() ; i++ ){
+        if (second.find(unique.at(i)) != -1){
+            cout << unique.at(i) << endl;
+        }
+    }
+    
+}
+
 
 
 
