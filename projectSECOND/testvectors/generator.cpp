@@ -5,79 +5,11 @@
 #include <string>
 #include <random>
 
+const int __MAX_WORD = 9000;
+int _MAX_TESTVECTOR_ONE = 10000 * 500;
+int _MAX_TESTVECTOR_TWO = 10000 * 1000;
+
 using namespace std;
-
-const int _MAX_BANDWIDTH = 10000 ;
-const int _MAX_TESTVECTOR = 100000;
-
-void readData(ifstream& inputStream, vector<string>& identifierName){
-
-string temp;
-
-getline(inputStream , temp) ;
-
-while(true){
-
-if (temp.size() == 0) break;
-
-identifierName.push_back(temp);
-
-getline(inputStream, temp);
-}
-
-inputStream.close();
-
-}
-
-
-int getBandwidth(){
-
-    return ( rand() % (_MAX_BANDWIDTH + 1 ) ) ;
-}
-
-
-int getindex( int size){
-
-    return (rand() % size);
-}
-
-
-void writeData(vector<string>& identifierName, string name){
-
-    const int _UNIQUE_SIZE_ = identifierName.size();
-
-    srand(time(NULL));
-
-    ofstream outFS;
-
-    outFS.open(name);
-
-    string temp;
-
-    string temp2;
-
-    for (int i = 0; i < _MAX_TESTVECTOR ; i++){
-        temp = identifierName.at(getindex(_UNIQUE_SIZE_));
-        
-        outFS << temp << " " ;
-
-        temp2 = identifierName.at(getindex(_UNIQUE_SIZE_));
-
-        while(true){
-            if (temp != temp2){
-                outFS << temp2 << " " << getBandwidth() << endl;
-                break; 
-            }
-            temp2 = identifierName.at(getindex(_UNIQUE_SIZE_));
-        }
-
-
-    }
-    
-   
-    outFS.close();
-
-}
 
 std::string random_string(std::string::size_type length)
 {
@@ -99,35 +31,50 @@ std::string random_string(std::string::size_type length)
 }
 
 
-void randomIdentifier(){
-    
-    ofstream outFS;
-
-    outFS.open("random_string.txt");
-
-    for (int i=0; i<(_MAX_TESTVECTOR/10); i++){
-
-        outFS << random_string(10) << endl;
-    }
-
-    outFS.close();
-
-}
-
 int main(){
 
+vector<string> hold;
 
-vector<string> identifierName;
+string random;
 
-randomIdentifier();
+int count = 0;
+
+while (count < __MAX_WORD){
+    
+    hold.push_back( random_string( (rand() % 15 + 3)));
+
+    count++;
+}
+
+ofstream outFile("testvector1.txt");
+
+count = 0 ;
+
+while (count <_MAX_TESTVECTOR_ONE){
+
+outFile <<  endl << hold.at( rand() % (hold.size()) )<< endl;
+
+count++;
+}
 
 
-ifstream inFS("random_string.txt");
+ofstream outFile2("testvector2.txt");
 
-readData(inFS, identifierName);
+count = 0 ;
 
-writeData(identifierName, name);
+while (count <_MAX_TESTVECTOR_TWO){
+
+outFile2 << " " << hold.at( rand() % (hold.size()) )  << endl;
+
+count++;
+}
 
 
-return 0 ;
+
+
+
+
+
+
+    return 0;
 }

@@ -11,13 +11,13 @@ template <typename Item>
 class PseudoVector{
 
     private:
-            Item* __array = nullptr;
-            unsigned int __size = 0;
-            bool __isSorted = false;
+            Item* __array ;
+            unsigned int __block;
+            unsigned int __size ;
+            bool __isSorted;
     public:
-
+   
     PseudoVector();
-    
     ~PseudoVector();
 
     Item at(unsigned int index) const;
@@ -29,31 +29,41 @@ class PseudoVector{
     void push_back(Item itemRef);
     
     // get size of vector 
-    int getSize(){
+    int getSize() const{
         return __size;
     }
 
-    //get unique 
-    void  unique(PseudoVector<Item>& test);
+    //__block size
+    int viewBlock() const{
+        return __block;
+
+    }
 
     int find(Item toFind);
 
+    //Pseudovector
+    void unique(PseudoVector& temp);
+
 };
 
-//Constructer 
 template <typename Item>
 PseudoVector<Item>::PseudoVector(){
+    __block = 100;
 
-__array = (Item*)malloc(sizeof(Item));
+    __array = (Item*)malloc( __block * sizeof(Item));
+    __size = 0;
+    __isSorted = false;
+    
 
-__size = 0;
 
 }
 
 // Destructor
 template <typename Item>
 PseudoVector<Item>::~PseudoVector(){
+
 free(__array);
+
 }
 
 
@@ -61,14 +71,17 @@ free(__array);
 template <typename Item>
 Item PseudoVector<Item>::at( unsigned int index) const{
 
-if ( index >= __size || index < 0){
-    throw  "std::out_of_range error";
+if ( index > __size -1 || index < 0){
+    std::cout << "Out of Index!" << std::endl;
+    exit(-1);
 }
 else{
 
     return *(__array + index);
 }
 }
+
+
 
 // MergeSort = true || QuickSort == false
 template <typename Item>
@@ -90,18 +103,29 @@ return ;
 template <typename Item>
 void PseudoVector<Item>::push_back(Item itemRef){
 
-if(__size == 0){
-    
-    *__array = itemRef;
-    
+if (__size == 0){
+    __array[0] = itemRef;
     __size++;
 }
 else{
-   __array = (Item*)realloc(__array , (__size + 1) *sizeof(Item));
-   __array[__size] = itemRef;
-   __size++;  
-}
+    __size++;
 
+    if ( __size > __block){
+        
+        //Logarithmic memory allocation model assencion model 
+        __block = int(log10(__block)) * __block ;
+        
+        __array = (Item*)realloc(this->__array , __block *sizeof(Item));
+
+        __array[__size - 1] = itemRef;
+        
+    }
+    else {
+        __array[__size -1 ] = itemRef;
+    }
+    
+
+}
 }
 
 
