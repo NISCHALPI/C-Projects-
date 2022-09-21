@@ -43,9 +43,19 @@ if (argv[1][0] == 'i'){
         second.push_back(temp);
     }
 
+    //EMPTY GUARD
+    if(first.getSize() == 0 || second.getSize()==0){
+        return 0;
+    }
+
+    inFile1.close();
+    inFile2.close();
+    
+
     first.sort(true);
     second.sort(true);
 
+    
     first.unique(unique);
 
     for(int i =0 ; i < unique.getSize() ; i++ ){
@@ -56,6 +66,7 @@ if (argv[1][0] == 'i'){
     
 }
 else if (argv[1][0] == 's'){
+    //Declare 
     PseudoVector<string> first;
     PseudoVector<string> second;
 
@@ -67,7 +78,7 @@ else if (argv[1][0] == 's'){
 
     string temp;
 
-
+    // Read
     while (!inFile1.fail())
     {
         inFile1 >> temp;
@@ -79,12 +90,23 @@ else if (argv[1][0] == 's'){
         inFile2 >> temp;
         second.push_back(temp);
     }
+    //Close file
 
-    first.sort(false);
-    second.sort(false);
+    inFile1.close();
+    inFile2.close();
+
+    //EMPTY GUARD
+    if(first.getSize() == 0 || second.getSize()==0){
+        return 0;
+    }
+
+    //Sort
+    first.sort(true);
+    second.sort(true );
 
     first.unique(unique);
 
+    //Uniques
     for(int i =0 ; i < unique.getSize() ; i++ ){
         if (second.find(unique.at(i)) != -1){
             cout << unique.at(i) << endl;

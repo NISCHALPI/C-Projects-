@@ -5,9 +5,9 @@
 #include <string>
 #include <random>
 
-const int __MAX_WORD = 9000;
-int _MAX_TESTVECTOR_ONE = 10000 * 500;
-int _MAX_TESTVECTOR_TWO = 10000 * 1000;
+const int __MAX_WORD = 90000000;
+int _MAX_TESTVECTOR_ONE = 200000;
+int _MAX_TESTVECTOR_TWO = 200000;
 
 using namespace std;
 
