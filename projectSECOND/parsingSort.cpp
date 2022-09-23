@@ -7,9 +7,21 @@ using namespace std;
 #include "include/pseudovector.h"
 
 
+/////////////////////////////////////////Function Signature////////////////////////////////////
+// Created to reuse code 
+template <typename useType>
+void printUnique( int argc , char** argv);
 
+
+
+
+
+//////////////////////////////////////////// Main Function///////////////////////////////////
 int main(int argc, char** argv){
 
+
+
+// Command Line args Guard
 if ( argc != 4 ){
 
     cout << "Not Enough Args! " << endl;
@@ -17,106 +29,84 @@ if ( argc != 4 ){
 }
 
 
-
+// Use function template 
 if (argv[1][0] == 'i'){
-    PseudoVector<int> first;
-    PseudoVector<int> second;
 
-    PseudoVector<int> unique;
+printUnique<int>(argc, argv);
 
-    ifstream inFile1(argv[2]);
-    ifstream inFile2(argv[3]);
-
-
-    int temp;
-
-
-    while (!inFile1.fail())
-    {
-        inFile1 >> temp;
-        first.push_back(temp);
-    }
-    
-    while (!inFile2.fail())
-    {
-        inFile2 >> temp;
-        second.push_back(temp);
-    }
-
-    //EMPTY GUARD
-    if(first.getSize() == 0 || second.getSize()==0){
-        return 0;
-    }
-
-    inFile1.close();
-    inFile2.close();
-    
-
-    first.sort(true);
-    second.sort(true);
-
-    
-    first.unique(unique);
-
-    for(int i =0 ; i < unique.getSize() ; i++ ){
-        if (second.find(unique.at(i)) != -1){
-            cout << unique.at(i) << endl;
-        }
-    }
-    
 }
-else if (argv[1][0] == 's'){
-    //Declare 
-    PseudoVector<string> first;
-    PseudoVector<string> second;
+else if  (argv[1][0] == 's'){
+printUnique<string>(argc, argv);
 
-    PseudoVector<string> unique;
-
-    ifstream inFile1(argv[2]);
-    ifstream inFile2(argv[3]);
-
-
-    string temp;
-
-    // Read
-    while (!inFile1.fail())
-    {
-        inFile1 >> temp;
-        first.push_back(temp);
-    }
-    
-    while (!inFile2.fail())
-    {
-        inFile2 >> temp;
-        second.push_back(temp);
-    }
-    //Close file
-
-    inFile1.close();
-    inFile2.close();
-
-    //EMPTY GUARD
-    if(first.getSize() == 0 || second.getSize()==0){
-        return 0;
-    }
-
-    //Sort
-    first.sort(false);
-    second.sort(false);
-
-    first.unique(unique);
-
-    //Uniques
-    for(int i =0 ; i < unique.getSize() ; i++ ){
-        if (second.find(unique.at(i)) != -1){
-            //cout << unique.at(i) << endl;
-        }
-    }
-    
 }
 
 
 
 
+// Sucess
 return 0;
+
+}
+
+
+
+
+
+
+////////////////////////////////////////////Function Implementation/////////////////////////////
+template <typename useType>
+void printUnique(int argc , char** argv){
+        // Vector Class Decleration
+PseudoVector<useType> first;
+PseudoVector<useType> second;
+PseudoVector<useType> unique;
+
+// Stream For Reading 
+ifstream inFile1(argv[2]);
+ifstream inFile2(argv[3]);
+
+
+// Temp Variable
+useType temp;
+
+
+// Append to Vectors
+while (!inFile1.fail())
+    {
+        inFile1 >> temp;
+        first.push_back(temp);
+    }
+    
+while (!inFile2.fail())
+{
+    inFile2 >> temp;
+    second.push_back(temp);
+}
+
+
+//EMPTY GUARD
+if(first.getSize() == 0 || second.getSize()==0){
+    return ;
+}
+
+// Close Files
+inFile1.close();
+inFile2.close();
+    
+//Sort 
+first.sort(true);
+second.sort(true);
+
+// Unique in First 
+first.unique(unique);
+
+// Loop and Find 
+for(int i =0 ; i < unique.getSize() ; i++ ){
+    if (second.find(unique.at(i)) != -1){
+        cout << unique.at(i) << endl;
+        }
+ }
+
+return;
+
 }
