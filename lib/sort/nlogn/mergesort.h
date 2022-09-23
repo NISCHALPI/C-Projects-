@@ -29,7 +29,8 @@ const int __THREADING_LAYER = (std::ceil(std::log2(__CPU__COUNT)));
 #endif
 
 
-// Normal
+///////////////////////////////////////////// Normal //////////////////////////////////////////////
+
 namespace mergesort{
 
 template <typename item>
@@ -126,10 +127,21 @@ else{
 
 }
 
+
+
+
+
+
+
+/////////////////////////////////////////THREADED////////////////////////////////////////
+
+
 // Threaded 
 namespace threaded_mergesort{
 
-void __merge( int* array, int& low , int mid , int& high){
+
+template <typename item>
+void __merge( item* array, int& low , int mid , int& high){
 
 // Reference for the mem address for final array copy
 int i = low ;
@@ -137,7 +149,7 @@ int j =  mid + 1;
 
 
 // Temporary heap memory allocated by the stack freame 
-int* arrayTemp = new int[high - low + 1];
+item* arrayTemp = new item[high - low + 1];
 
 //DUMMY INDEX FOR arrayTemp
 int dummyIndex = 0;
@@ -200,7 +212,8 @@ delete [] arrayTemp ;
 }
 
 
-void mergeSort(int* array, int start, int end , int depth = 0, int __THREADING =__THREADING_LAYER){
+template <typename item>
+void mergeSort(item* array, int start, int end , int depth = 0, const int __THREADING =__THREADING_LAYER){
 // depth means thread spawn level | i.e. depth =4, threads = 2^4
 // Base case upto leaf of the tree
 if( start == end ){
@@ -211,11 +224,15 @@ else{
 
    // Avoids spwaning threads after a layer 
    if (depth < __THREADING_LAYER){
+   
    int mid = (start + end) / 2 ;
 
+
+
    //Spawn two tree branch threads 
-   std::thread t1(mergeSort, array , start , mid, depth++ , __THREADING_LAYER);
-   std::thread t2(mergeSort, array, mid + 1 , end, depth++, __THREADING_LAYER);
+   std::thread t1(mergeSort<item>, array , start , mid, depth++ , __THREADING_LAYER);
+   std::thread t2(mergeSort<item>, array, mid + 1 , end, depth++, __THREADING_LAYER);
+   
    // Thread Join
    t1.join();
    t2.join(); 
@@ -223,13 +240,13 @@ else{
    else {
    
    // DO first half
-   mergeSort(array , start , (start +end) / 2, depth);
+   mergeSort<item>(array , start , (start +end) / 2, depth);
    // Do second half
-   mergeSort(array ,((start +end) / 2 ) + 1 , end, depth);
+   mergeSort<item>(array ,((start +end) / 2 ) + 1 , end, depth);
 
    }
    // Join after threads are finished
-   __merge(array, start, ((start + end)/2 ), end );  
+   __merge<item>(array, start, ((start + end)/2 ), end );  
 }  
 }
 

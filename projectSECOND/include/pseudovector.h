@@ -1,10 +1,13 @@
 #ifndef __PSEUDOVECTOR__
 #define __PSEUDOVECTOR__
 
+
+
 //Includes Custom Libraries
 #include "../../lib/sort/nlogn/mergesort.h"
 #include "../../lib/sort/nlogn/quicksort.h"
 #include "../../lib/search/binary.h" 
+#include "../../lib/sort/n2/insersion_sort.h"
 
 
 template <typename Item>
@@ -15,6 +18,8 @@ class PseudoVector{
             size_t  __block;
             size_t  __size ;
             bool __isSorted;
+            bool __sortGuard();
+
     public:
     
     // Rule of 3 Inmplementation 
@@ -29,7 +34,7 @@ class PseudoVector{
     Item at( int index) const;
 
     //sorting 
-    void sort(bool typesort = true);
+    void sort(bool typesort = true , bool useThreads = false);
 
     //void push_back(Item& itemRef);
     void push_back(Item itemRef);
@@ -77,6 +82,7 @@ for(int i=0; i< __size; i++){
 }
 
 
+
 // Equality operator 
 template <typename Item>
 PseudoVector<Item>& PseudoVector<Item>::operator=(const PseudoVector<Item>& objtoCopy){
@@ -118,6 +124,10 @@ PseudoVector<Item>::PseudoVector(){
 
 }
 
+
+
+
+
 // Destructor
 template <typename Item>
 PseudoVector<Item>::~PseudoVector(){
@@ -127,6 +137,8 @@ delete[] __array;
 
 
 }
+
+
 
 
 // at 
@@ -145,42 +157,98 @@ else{
 
 
 
-///////////////////////////////// Sorting implementation//////////////////// 
+
+
+// /////////////////////////////////////////////////Sorting and Uniqueness Section//////////////// 
+
+
+// Check if __array is already Sorted
+template <typename Item>
+bool PseudoVector<Item>::__sortGuard(){
+
+    bool __state = true ;
+    int __discrepency =0;
+
+    
+    // Iterates to see if array is nearly sorted or not 
+    for(int i = 1; i < __size ; i++ ){
+        if ( __array[i] < __array[i -1]){
+            __state = false;
+            __discrepency++;
+        }
+    }
+
+
+
+    // If nearly sorted, use insersion sort  
+    if ( !__state && __discrepency <= int(log10(__size))){
+        insersion_sort::insersionSort(__array , __size -1);
+        return true;
+    }
+    else{
+        return __state;
+    }
+
+
+}
+
+
+
 
 //MergeSort = true || QuickSort == false
 template <typename Item>
-void PseudoVector<Item>::sort(bool typesort){
+void PseudoVector<Item>::sort(bool useMergesort , bool useThread ){
 
 // Empty guard
-if(__size == 0){
+if(__size == 0 || __size == 1){
     return;
 }
+
 
 // Re-Sort Guard
 if (__isSorted){
     return;
 }
 
+// Check if Already Sorted 
+if (__sortGuard()){
+    return ;
+}
 
 
-if (typesort){
-    mergesort::mergeSort(__array, 0, __size -1);
+// Sort Implementation
+if (useMergesort){
+
+    if (useThread){
+        threaded_mergesort::mergeSort(__array, 0, __size -1);
+    }
+    else{
+        mergesort::mergeSort(__array, 0 , __size -1);
+    }
+
 }
 
 else{
-    quicksort::quickSort(__array , 0 , __size -1);
+
+    if (useThread){
+        threaded_quicksort::quickSort(__array, 0, __size -1);
+    }
+    else{
+        quicksort::quickSort(__array, 0 , __size -1);
+    }
+
 }
 
 __isSorted = true;
 
 return ;
+
 }
 
 
 
 
-//////////////////////////////// Pushback implementation
-
+//// Logistic Pushback implementation
 template <typename Item>
 void PseudoVector<Item>::push_back(Item itemRef){
 
@@ -226,23 +294,28 @@ else {
     __array[__size -1 ] = itemRef;
 
 }
-    
+
+
+// Not Sorted after Pushback
+if (__isSorted){
+    __isSorted = false;
+}
+
 
 }
 
 
 
 
-
-
-
-
-// Returns a pseudovector of unique items 
+// Find implementation 
 template <typename Item>
 int PseudoVector<Item>::find(Item toFind){
 
 return binary_search::binarySearch(__array , toFind , 0 , __size -1);
 }
+
+
+
 
 // Returns a pseudovector of unique items 
 template <typename Item>
@@ -263,7 +336,7 @@ void PseudoVector<Item>::unique(PseudoVector<Item>& temp){
 
 
 
-
+///////////////////////////////////////////////////////END OF CLASS////////////////////////////////
 
 
 

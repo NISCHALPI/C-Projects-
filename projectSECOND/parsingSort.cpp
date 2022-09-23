@@ -101,15 +101,15 @@ else if (argv[1][0] == 's'){
     }
 
     //Sort
-    first.sort(true);
-    second.sort(true );
+    first.sort(false);
+    second.sort(false);
 
     first.unique(unique);
 
     //Uniques
     for(int i =0 ; i < unique.getSize() ; i++ ){
         if (second.find(unique.at(i)) != -1){
-            cout << unique.at(i) << endl;
+            //cout << unique.at(i) << endl;
         }
     }
     

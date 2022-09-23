@@ -3,7 +3,8 @@
 
 // Runtime complexiy is O(N) for nearly sorted array
 
-#include <iostream>
+
+namespace insersion_sort{
 
 //Template for Selection Sort
 // Big O order = O(n^2)
@@ -60,7 +61,7 @@ for (sortedIndex ; sortedIndex < size;  sortedIndex++){
 }
 }
 
-
+}
 //INTEGER TEST VECTOR PASSED
 
 #endif
