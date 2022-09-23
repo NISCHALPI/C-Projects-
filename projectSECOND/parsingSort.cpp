@@ -29,7 +29,7 @@ if ( argc != 4 ){
 }
 
 
-// Use function template 
+// Use function template for specific data type
 if (argv[1][0] == 'i'){
 
 printUnique<int>(argc, argv);
@@ -56,7 +56,9 @@ return 0;
 ////////////////////////////////////////////Function Implementation/////////////////////////////
 template <typename useType>
 void printUnique(int argc , char** argv){
-        // Vector Class Decleration
+
+
+// Vector Class Decleration
 PseudoVector<useType> first;
 PseudoVector<useType> second;
 PseudoVector<useType> unique;
@@ -92,13 +94,28 @@ if(first.getSize() == 0 || second.getSize()==0){
 // Close Files
 inFile1.close();
 inFile2.close();
-    
-//Sort 
-first.sort(true);
-second.sort(true);
 
-// Unique in First 
+
+// When to use merge and threads
+bool useMerge = typeid(useType) == typeid(int);
+bool useThread = (__CPU__COUNT >= 6);
+
+
+
+//Sort 
+first.sort(useMerge, useThread);
+second.sort(useMerge , useThread);
+
+
+// Find Unique in small one 
+if (second.getSize() > first.getSize()){
 first.unique(unique);
+}
+else{
+    second.unique(unique);
+}
+
+
 
 // Loop and Find 
 for(int i =0 ; i < unique.getSize() ; i++ ){
