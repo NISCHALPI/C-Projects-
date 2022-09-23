@@ -1,0 +1,11 @@
+Write a C++ program that operates as described below.
+
+Your program should accept four command line arguments. Argument 1 is either “i” or “s”, arguments 2 and 3 are the names of the input files.
+
+Your program will read streams of data from the input files until end-of-file. If argument 1 is “i” then the data will be integer values, but if argument 1 is “s” the data will be strings of visible characters. Both kinds of values will be separated by whitespace (blanks, tabs, newlines).
+
+Your program should sort the data from both files using mergesort if argument 1 is "i" and quicksort if argument 1 is "s". Both sort functions are O(n lg n). It is recommended to use the algorithms in ZyBooks.
+
+Your program will write to standard out all the data (integers or strings) that appear in both of the input files. The data output should be sorted in ascending order, either numerically for integers or lexicographically for strings. Write one value per line, and discard any duplicate values; a value should only be output once, no matter how many times it appears.
+
+There will be no more than 20,000 data items in each file.
