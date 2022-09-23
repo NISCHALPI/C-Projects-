@@ -6,14 +6,6 @@
 #include <random>
 
 
-// __MAX_RANDOM WORD TO CHOOSE | POOL OF WORD
-const int __MAX_WORD = 9000000;
-
-// MAX TESTVECTOR1.txt 
-int _MAX_TESTVECTOR_ONE = 200000;
-
-// MAX TESTVECTOR2.txt
-int _MAX_TESTVECTOR_TWO = 200000;
 
 
 
@@ -40,9 +32,23 @@ std::string random_string(std::string::size_type length)
 }
 
 
-int main(){
+int main(int argc , char** argv){
+
+if (argc != 4){
+
+cout << "Usuag: ./a.out <total word pool> <no of random words to be written from pool to testvector1.txt> <no of random words to be written from pool to testvector2.txt>" << endl ;
+
+exit (-1);
+
+}
+
+int __MAX_WORD = atoi(argv[1]);
 
 
+int _MAX_TESTVECTOR_ONE = atoi(argv[2]);
+
+
+int _MAX_TESTVECTOR_TWO = atoi(argv[3]);
 
 
 
