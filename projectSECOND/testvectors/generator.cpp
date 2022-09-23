@@ -5,12 +5,21 @@
 #include <string>
 #include <random>
 
-const int __MAX_WORD = 90000000;
+
+// __MAX_RANDOM WORD TO CHOOSE | POOL OF WORD
+const int __MAX_WORD = 9000000;
+
+// MAX TESTVECTOR1.txt 
 int _MAX_TESTVECTOR_ONE = 200000;
+
+// MAX TESTVECTOR2.txt
 int _MAX_TESTVECTOR_TWO = 200000;
+
+
 
 using namespace std;
 
+// RANDOM STRING GENERATOR | ARGUMENT : LENGTH OF STRING 
 std::string random_string(std::string::size_type length)
 {
     static auto& chrs = "0123456789"
@@ -33,7 +42,16 @@ std::string random_string(std::string::size_type length)
 
 int main(){
 
+
+
+
+
 vector<string> hold;
+
+
+// Random chars in bet'n string
+char __random_chars[3] = {'\n', '\t' , ' '};
+
 
 string random;
 
@@ -46,13 +64,14 @@ while (count < __MAX_WORD){
     count++;
 }
 
+
 ofstream outFile("testvector1.txt");
 
 count = 0 ;
 
 while (count <_MAX_TESTVECTOR_ONE){
 
-outFile <<  endl << hold.at( rand() % (hold.size()) )<< endl;
+outFile << __random_chars[rand() % 3]<< hold.at( rand() % (hold.size()) )<< __random_chars[rand() % 3] << endl;
 
 count++;
 }
@@ -64,7 +83,7 @@ count = 0 ;
 
 while (count <_MAX_TESTVECTOR_TWO){
 
-outFile2 << " " << hold.at( rand() % (hold.size()) )  << endl;
+outFile2 << __random_chars[rand() % 3] << hold.at( rand() % (hold.size()) ) <<__random_chars[rand() % 3]  << endl;
 
 count++;
 }
