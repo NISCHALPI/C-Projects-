@@ -16,6 +16,7 @@ void printUnique( int argc , char** argv);
 
 
 
+
 //////////////////////////////////////////// Main Function///////////////////////////////////
 int main(int argc, char** argv){
 
@@ -107,22 +108,42 @@ first.sort(useMerge, useThread);
 second.sort(useMerge , useThread);
 
 
+bool usedFirst = true;
+
 // Find Unique in small one 
 if (second.getSize() > first.getSize()){
 first.unique(unique);
 }
 else{
+    usedFirst = false;
     second.unique(unique);
 }
 
 
 
-// Loop and Find 
+// Use unique to find intersecting
+if (usedFirst){
+
+// Loop and Find through second
 for(int i =0 ; i < unique.getSize() ; i++ ){
     if (second.find(unique.at(i)) != -1){
         cout << unique.at(i) << endl;
         }
  }
+
+}
+else{
+
+// Loop and Find throuch first
+for(int i =0 ; i < unique.getSize() ; i++ ){
+    if (first.find(unique.at(i)) != -1){
+        cout << first.at(i) << endl;
+        }
+ }
+
+
+}
+
 
 return;
 
