@@ -213,7 +213,7 @@ delete [] arrayTemp ;
 
 
 template <typename item>
-void mergeSort(item* array, int start, int end , int depth = 0, const int __THREADING =__THREADING_LAYER){
+void mergeSort(item* array, int start, int end ,  int __THREADING =__THREADING_LAYER){
 // depth means thread spawn level | i.e. depth =4, threads = 2^4
 // Base case upto leaf of the tree
 if( start == end ){
@@ -223,15 +223,15 @@ if( start == end ){
 else{
 
    // Avoids spwaning threads after a layer 
-   if (depth < __THREADING_LAYER){
+   if ( __THREADING> 0){
    
    int mid = (start + end) / 2 ;
 
 
 
    //Spawn two tree branch threads 
-   std::thread t1(mergeSort<item>, array , start , mid, depth++ , __THREADING_LAYER);
-   std::thread t2(mergeSort<item>, array, mid + 1 , end, depth++, __THREADING_LAYER);
+   std::thread t1(mergeSort<item>, array , start , mid, __THREADING -1);
+   std::thread t2(mergeSort<item>, array, mid + 1 , end, __THREADING-1);
    
    // Thread Join
    t1.join();
@@ -240,13 +240,13 @@ else{
    else {
    
    // DO first half
-   mergeSort<item>(array , start , (start +end) / 2, depth);
+   mergeSort<item>(array , start , (start +end) / 2, __THREADING );
    // Do second half
-   mergeSort<item>(array ,((start +end) / 2 ) + 1 , end, depth);
+   mergeSort<item>(array ,((start +end) / 2 ) + 1 , end, __THREADING);
 
    }
    // Join after threads are finished
-   __merge<item>(array, start, ((start + end)/2 ), end );  
+   __merge<item>(array, start, ((start + end)/2 ), end);  
 }  
 }
 
