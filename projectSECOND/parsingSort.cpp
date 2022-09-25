@@ -103,7 +103,7 @@ bool useThread = (__CPU__COUNT >= 6);
 
 
 
-//Sort 
+//Sort both array
 first.sort(useMerge, useThread);
 second.sort(useMerge , useThread);
 

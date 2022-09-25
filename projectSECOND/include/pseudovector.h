@@ -29,10 +29,14 @@ class PseudoVector{
     PseudoVector<Item>& operator=( const PseudoVector<Item>& toCopy);
 
 
+    // SECTION: ACCECORS 
 
     // At Implementation
     Item at( int index) const;
 
+    Item back() const ;
+    
+    
     //sorting 
     void sort(bool typesort = true , bool useThreads = false);
 
@@ -141,7 +145,7 @@ delete[] __array;
 
 
 
-// at 
+// at Implementation
 template <typename Item>
 Item PseudoVector<Item>::at(int index) const{
 
@@ -157,7 +161,13 @@ else{
 
 
 
+// back Inplementation
+template <typename Item>
+Item PseudoVector<Item>::back() const{
 
+    // Returns last element 
+    return __array[__size -1];
+}
 
 // /////////////////////////////////////////////////Sorting and Uniqueness Section//////////////// 
 
@@ -165,7 +175,8 @@ else{
 // Check if __array is already Sorted
 template <typename Item>
 bool PseudoVector<Item>::__sortGuard(){
-
+    
+    //Assumes Already Sorted
     bool __state = true ;
     int __discrepency =0;
 
@@ -210,7 +221,7 @@ if (__isSorted){
     return;
 }
 
-// Check if Already Sorted 
+// Check if unsorted array happens to be already ot nearly sorted 
 if (__sortGuard()){
     return ;
 }
@@ -311,23 +322,69 @@ if (__isSorted){
 template <typename Item>
 int PseudoVector<Item>::find(Item toFind){
 
-return binary_search::binarySearch(__array , toFind , 0 , __size -1);
+    // If Not Sorted, do linear search
+    if (!__isSorted){
+        for(int i=0; i< __size ; i++){
+
+            if( __array[i] == toFind){
+                return i;
+            }
+
+        }
+        return -1;
+    }
+    else{
+        
+        // Do to Binary Search
+        return binary_search::binarySearch(__array , toFind , 0 , __size -1);
+    }
+
+
+
 }
 
 
 
 
-// Returns a pseudovector of unique items 
+// Accepts a empty pseudovector and fills it with qnique items of current object 
 template <typename Item>
 void PseudoVector<Item>::unique(PseudoVector<Item>& temp){
 
     // Add first 
     temp.push_back(__array[0]);
-    
-    for (int i =1; i< __size ; i++){
-        if (temp.find(__array[i]) == -1){
-            temp.push_back(__array[i]);
+
+
+
+    if (!this->__isSorted){
+        
+        // If parent not sorted implement, approx ~ O(n*no_of_uniq) algorithm  
+        for (int i =1; i< __size ; i++){
+
+            // If not found in temp array, append in temp array
+            // Works for unsorted array
+            if (temp.find(__array[i]) == -1){
+                temp.push_back(__array[i]);
+            }
+        
         }
+    
+    }
+
+    else {
+        // n algorithm to find unique in sorted array 
+        // The unique are also sorted
+       for (int i =1; i< __size ; i++){
+
+            // If not equal to last element in temp, do pushback
+            if ( __array[i] != temp.back() ){
+                temp.push_back(__array[i]);
+
+            }
+        }
+
+        // Finally the unique array will also be sorted because parent array will also be sorted 
+        temp.__isSorted = true;
+
     }
 
     

@@ -94,37 +94,6 @@ quickSort(array , index_low + 1 , end);
 // Threaded Version 
 namespace threaded_quicksort{
 
-/// partition implementation 
-template <typename item>
-int __partition(item* array, int start,  int stop){
-
-item pivot = array[((start + stop) / 2)];
-
-item temp ;
-
-while(true){
-    while(array[start] < pivot){
-        start++;
-    }
-    while(array[stop] > pivot){
-        stop--;
-    }
-    if(start >= stop){
-        break;
-    }
-
-    temp = array[stop];
-    array[stop] = array[start];
-    array[start] = temp;
-    start++;
-    stop--;
-
-    }
-
-
-return stop;
-
-}
 
 
 
@@ -137,7 +106,7 @@ if (start == end){
 } 
 
 else{
-int index_low  = __partition(array, start , end);
+int index_low  = quicksort::__partition(array, start , end);
 
 if (__THREADING > 0){
 

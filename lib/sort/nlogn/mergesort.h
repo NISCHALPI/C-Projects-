@@ -141,78 +141,6 @@ namespace threaded_mergesort{
 
 
 template <typename item>
-void __merge( item* array, int& low , int mid , int& high){
-
-// Reference for the mem address for final array copy
-int i = low ;
-int j =  mid + 1;
-
-
-// Temporary heap memory allocated by the stack freame 
-item* arrayTemp = new item[high - low + 1];
-
-//DUMMY INDEX FOR arrayTemp
-int dummyIndex = 0;
-
-
-// WHO WENT FIRST  | ASSUMED FIRST WENT FIRST (i.e true)
-bool whoFirst = true ;
-
-// Merge until one is over 
-// SINCE MID IS A LAST ITEM OF FIRST PART 
-while (true){
-
-if (i > mid){
-   break;
-}
-
-if ( j > high){
-   whoFirst = false;
-   break;
-}
-
-if (array[i] < array[j]){
-   arrayTemp[dummyIndex] =  array[i] ;
-   dummyIndex++;
-   i++;
-}
-else{
-
-   arrayTemp[dummyIndex] = array[j];
-   dummyIndex++;
-   j++;
-}
-
-}
-
-// ACCOUNT FOR THE REMAINING TERMS 
-if (whoFirst){
-
-   while(!(j> high)){
-      arrayTemp[dummyIndex] = array[j];
-      dummyIndex++;
-      j++;
-   }
-}
-else{
-   while(!(i> mid)){
-      arrayTemp[dummyIndex] = array[i];
-      dummyIndex++;
-      i++;
-   }
-
-}
-
-// MEM COPY PART 
-for (int k = 0; k < (high - low +  1); k++){
-   array[k + low] =arrayTemp[ k] ;
-}
-
-delete [] arrayTemp ;
-}
-
-
-template <typename item>
 void mergeSort(item* array, int start, int end ,  int __THREADING =__THREADING_LAYER){
 // depth means thread spawn level | i.e. depth =4, threads = 2^4
 // Base case upto leaf of the tree
@@ -246,8 +174,9 @@ else{
 
    }
    // Join after threads are finished
-   __merge<item>(array, start, ((start + end)/2 ), end);  
-}  
+   mergesort::__merge<item>(array, start, ((start + end)/2 ), end);  
+}
+
 }
 
 
