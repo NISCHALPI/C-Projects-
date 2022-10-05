@@ -1,0 +1,71 @@
+20.5 P3: Contact List
+
+
+Overview
+In this project, you will use linked lists to maintain contacts and their information. You will complete the ContactList class, which wraps a linked list of contacts where each Contact has a linked list of Info.
+
+
+Classes
+There are three classes with the following information:
+
+class Info {
+    string name;
+    string value;
+    Info *next;
+}
+
+class Contact {
+    string first;
+    string last;
+    Contact *next;
+    Info *headInfoList;
+}
+
+class ContactList {
+    Contact *headContactList;
+    int count;
+}
+
+				
+Files
+
+This project consists of three files:
+
+main.cpp - The interface that prompts for and performs actions.
+p3.h - Definitions of classes.
+p3.cpp - Implementation of the class methods in p3.h.
+
+
+
+To compile this project, use g++ -Wall main.cpp p3.cpp -std=c++11.
+You can download the templates below under Submission Instructions. Complete the class methods in p3.cpp. You are allowed to modify p3.h and add additional methods to the classes. You are encouraged to write more methods and functions than those listed, but you must not change the class names or the method signatures already defined.
+
+
+
+Approach
+It is recommended to complete this project one method at a time, working from the easiest to the hardest. Each will be graded individually, so you can get partial credit.
+
+addContact, addInfo, printContact, print
+addContactOrdered and addInfoOrdered
+removeInfo and removeContact
+destructor, copyConstructor, operator=
+Think about helper methods/functions you can write. What actions need to be repeated? What methods could be broken into several smaller methods? What methods can you call inside other methods to help solve the problem? The destructor needs to remove. The copyConstructor and operator= need to add, etc.
+
+
+
+Develop incrementally and test often.
+
+
+
+
+Notes
+Format your output exactly as the example.
+Do not include libraries other than iostream and string.
+Testing
+Assume valid inputs.
+To speedup testing, you can enter all commands in an input file and redirect the program input from the file: ./a.out < test1.txt
+./a.out < test1.txt > output.txt will redirect output to the file output.txt.
+To make results easier to read, you can add the command-line argument no: ./a.out no < test1.txt
+Be sure to test your program thoroughly and check edge cases.
+When testing the program, an addContact will not be combined with an addContactOrdered or an addInfo with an addInfoOrdered in the same test case.
+A sample execution of the program is below to build the linked lists as illustrated in the example above. Additional examples are available in the tester project.

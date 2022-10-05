@@ -8,8 +8,8 @@
 
 
 
-
 using namespace std;
+
 
 // RANDOM STRING GENERATOR | ARGUMENT : LENGTH OF STRING 
 std::string random_string(std::string::size_type length)
@@ -32,71 +32,91 @@ std::string random_string(std::string::size_type length)
 }
 
 
+
 int main(int argc , char** argv){
 
-if (argc != 4){
 
-cout << "Usuag: ./a.out <total word pool> <no of random words to be written from pool to testvector1.txt> <no of random words to be written from pool to testvector2.txt>" << endl ;
+if (argc != 5){
+
+cout << "Usage is follows:" <<endl <<  endl ;
+cout << "If you want to generate two file with 1000 words with few intersecting words, use following syntax: " << endl << endl;
+cout << "./a.exe s 10000 1000 1000" << endl << endl;
+cout << "s stands for string, use i for int" << endl ;
+cout << "first 10,000 is for pool of words to randomly choose form" << endl;
+cout << "Following 1000 is the amount of items in each file" << endl << endl;
+cout << "Files will be named test1.txt and test2.txt" << endl;
 
 exit (-1);
 
 }
 
-int __MAX_WORD = atoi(argv[1]);
+
+// Dimensions 
+int __MAX_WORD = atoi(argv[2]);
+
+int _MAX_TESTVECTOR_ONE = atoi(argv[3]);
+
+int _MAX_TESTVECTOR_TWO = atoi(argv[4]);
 
 
-int _MAX_TESTVECTOR_ONE = atoi(argv[2]);
 
-
-int _MAX_TESTVECTOR_TWO = atoi(argv[3]);
-
-
-
-vector<string> hold;
 
 
 // Random chars in bet'n string
 char __random_chars[3] = {'\n', '\t' , ' '};
 
 
-string random;
 
-int count = 0;
+// Out Streams 
+ofstream outFile("test1.txt");
+ofstream outFile2("test2.txt");
 
-while (count < __MAX_WORD){
+
+
+if (argv[1][0] == 'i'){
+
+    for(int i =0; i <_MAX_TESTVECTOR_ONE; i++ ){
+
+        outFile << __random_chars[rand() % 3] << rand() % __MAX_WORD << __random_chars[rand() % 3] ; 
+
+    }
+
+    for(int i =0; i <_MAX_TESTVECTOR_TWO; i++ ){
+
+        outFile2 << __random_chars[rand() % 3] << rand() % __MAX_WORD << __random_chars[rand() % 3] ; 
+
+    }
+
+}
+
+else {
+    // Pool Vector
+    vector<string> hold;
+
+    for(int i =0; i <__MAX_WORD; i++ ){
+        hold.push_back(random_string(rand() % 15));
+       
+    }
     
-    hold.push_back( random_string( (rand() % 15 + 3)));
 
-    count++;
+    for(int i =0; i <_MAX_TESTVECTOR_ONE; i++ ){
+
+        outFile << __random_chars[rand() % 3] <<  hold.at(rand() % __MAX_WORD)<< __random_chars[rand() % 3] << endl ; 
+
+    }
+
+    for(int i =0; i <_MAX_TESTVECTOR_TWO; i++ ){
+
+        outFile2 << __random_chars[rand() % 3] <<  hold.at(rand() % __MAX_WORD) << __random_chars[rand() % 3] << endl ; 
+
+    }
+
+
+
+
 }
-
-
-ofstream outFile("testvector1.txt");
-
-count = 0 ;
-
-while (count <_MAX_TESTVECTOR_ONE){
-
-outFile << __random_chars[rand() % 3]<< hold.at( rand() % (hold.size()) )<< __random_chars[rand() % 3] << endl;
-
-count++;
-}
-
-
-ofstream outFile2("testvector2.txt");
-
-count = 0 ;
-
-while (count <_MAX_TESTVECTOR_TWO){
-
-outFile2 << __random_chars[rand() % 3] << hold.at( rand() % (hold.size()) ) <<__random_chars[rand() % 3]  << endl;
-
-count++;
-}
-
-
-
-
+outFile.close();
+outFile2.close();
 
 
 

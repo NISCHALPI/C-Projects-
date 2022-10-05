@@ -1,0 +1,16 @@
+Command:
+./a.out no < test1.txt
+
+
+Contact Name: Wanda Maximoff
+Contact Name: Peter Parker
+    alias | Spider-Man
+    color | red-and-blue
+Contact Name: Natasha Romanoff
+    alias | BlackWidow
+    birthday | December-3-1984
+    email | black.widow@avengers.com
+Contact Name: Tony Stark
+    alias | IronMan
+    color | red-and-gold
+
