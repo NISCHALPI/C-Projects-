@@ -1,9 +1,11 @@
+#ifndef __LIST__LIB__
+#define __LIST__LIB__
+
+
 #include <iostream>
 #include <stdexcept>
 #include "../sort/nlogn/mergesort.h"
 
-
-using namespace std;
 
 // Forward Decleration
 template<typename Item>
@@ -505,3 +507,4 @@ class List{
 
 };
 
+#endif
