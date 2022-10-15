@@ -2,13 +2,6 @@
 #include <stdexcept>
 #include "../vector/pseudovector.h"
 
-using namespace std;
-
-
-// Define Key Size 
-#if !defined(__KEYSIZE)
-#define __KEYSIZE 5
-#endif // __KEYSIZE
 
 
 
@@ -22,9 +15,9 @@ class Node{
     
     private:
         Item data;
-        Node* front;
-        Node* back;
-        size_t index;
+        Node<Item>* front;
+        Node<Item>* back;
+        int index;
         
         
 
@@ -32,8 +25,8 @@ class Node{
         
         // Default Constructor 
         Node(){
-            index =NULL;
-            data = NULL;
+            index =INT16_MAX;
+            data = INT16_MAX;
             front = nullptr;
             back = nullptr;
         }
@@ -49,14 +42,27 @@ class Node{
         // Copy Constructor 
         Node(const Node& toCopy){
 
-            throw logic_error("Cannot Copy Node! False Call");
+            throw std::logic_error("Cannot Copy Node! False Call");
         }
 
         // Copy Assignment Operator 
         Node& operator=(const Node& toCopy){
 
-            throw logic_error("Cannot Copy Node! False Call");
+            throw std::logic_error("Cannot Copy Node! False Call");
 
+        }
+
+        // Is head or Tail
+        bool isHead() const{
+            return (index == -1) ? true : false ;
+        }
+
+        bool isTail() const{
+            return (index == -2) ? true : false ;
+        }
+
+        Item getData() const {
+            return data;
         }
 
         // Friend                --- Template Parameter has to  be different
@@ -74,13 +80,62 @@ class List{
         Node<Item>* head;
         Node<Item>* tail;
         size_t __size;
-
-        // Mapping The Items 
-        PseudoVector<Node<Item>*> map;
         
         
+        // Linear Search Function
+        Node<Item>* __search(Item data){
+            
+            auto temp = getHead();
 
+            while(!temp->isTail()){
+                
+                if(temp->data == data){
+                    return temp;
+                }
 
+                temp = temp->back;
+            }
+
+            return nullptr;
+
+        }
+
+        // Add Node Private Func
+        void __addNode(Node<Item>* previous , Item data){
+        
+        // New Heap Node
+        Node<Item>* toAdd = new Node<Item>(data);
+        
+        // Pointer Linking | 4 Way linking 
+        toAdd->front = previous;
+        toAdd->back = previous->back;
+        previous->back->front = toAdd;
+        previous->back = toAdd;
+
+        toAdd->index = __size;
+        
+        return;
+       }
+    
+        // Abstract removal operation
+        void __removeNode(Node<Item>* removalNode){
+
+            if (removalNode->isHead() || removalNode->isTail()){
+                throw std::logic_error("Removing the dummy node is not allowed"); 
+            }
+
+            // Relinking Linking
+            removalNode->back->front = removalNode->front;
+            removalNode->front->back = removalNode->back; 
+
+            __size--;
+
+            // Need to free Node 
+            delete removalNode;
+            
+        } 
+
+    
     public:
 
 
@@ -89,224 +144,247 @@ class List{
        
         // Default
         List(){
-            head = nullptr;
-            tail = nullptr;
+            
+            head = new Node<Item>;
+            tail = new Node<Item>;
+
             __size = 0;
+
+            head->index = -1;
+            tail->index = -2;
+
+            // Initial Linking
+            head->back = tail;
+            tail->front = head;
+            
+            
         }
 
         // Item Constructor
         List(Item data){
-            head = new Node<Item>(data);
-            tail = head;
-            __size = 1;
+            
+            head = new Node<Item>;
+            tail = new Node<Item>;
+
+            __size = 0;
+
+            head->index = -1;
+            tail->index = -2;
+
+            // Initial Linking
+            head->back = tail;
+            tail->front = head;
+            
+            //Font Push
+            push_front(data);
+        }
+    
+        // Copy Constructer
+        List(const List& toCopy){
+            
+            head = new Node<Item>;
+            tail = new Node<Item>;
+
+            __size = 0;
+
+            head->index = -1;
+            tail->index = -2;
+
+            // Initial Linking
+            head->back = tail;
+            tail->front = head;
+            
+            Node<Item>* temp = toCopy.head->back;
+
+
+            while(!temp->isTail()){
+
+                push_back(temp->data);
+                temp = temp->back;
+            }
+
+
+
         }
 
         // Destructor
         ~List(){
             
-           // Checks if head is not empty 
-           if (head != nullptr){
-            
-            
-            // Until last node 
             while(head->back != nullptr){
                 head = head->back;
-                delete head->front;
-            }   
-
-            //delete Last Node itself 
+                delete head->front; 
+            }
+            
             delete head;
-           }
-            
-        }
-
-        // Copy Constructer
-        List(const List& toCopy){
-            
-            // Default wont get called
-            this->head = nullptr;
-            this->tail = nullptr;
-            this->__size = 0;
-
-            for(Node<Item>* currIndx = toCopy.getHead(); currIndx != nullptr; currIndx = currIndx->back){
-                this->push_back(currIndx->data);
-            }
-
-
-        }
-
-        // Copy Assignment Operator 
-        List& operator=(List& toCopy){
-            
-            // Self Assignment Guard
-            if(this == &toCopy){
-                return *this;
-            }
-            
-            // Free if already there ,apply destructor
-            if (this->head != nullptr){
-                // Until last node 
-                while(!head->back){
-                    head = head->back;
-                    delete head->front;
-                }   
-
-                //delete Last Node itself 
-                delete head;
-
-            }
- 
-
-            // Reinitialze private variables
-            this->head = nullptr;
-            this->tail = nullptr;
-            this->__size = 0;
-
-            // Copy new data 
-            for(Node<Item>* currIndx = toCopy.getHead();currIndx != nullptr; currIndx = currIndx->back){
-
-            this->push_back(currIndx->data);
-            
-            }
-
-            return *this;
-            
+         
         }
 
 
-
-
+        
 
 
 //////////////////////////////////SECTION: MUTATORS ////////////////////////////
  
+       
+       
         // push_back implementation
         void push_back(Item data){
            
-            
-            // Generate New Node 
-            Node<Item>* newNode = new Node<Item>(data);
-            
-            
-            // Size Guard
-            if (__size== 0){
-                head = newNode;
-                tail = head ;
-                __size++;
-                return;
-            }
-
-            // If size is not 0
-            tail->back = newNode ;
-            newNode->front = tail;
-            tail = newNode;
-
-            // Increment Size 
+           // Add Node after tail 
+            __addNode(tail->front, data);
             __size++;
-
-            if (__size % __KEYSIZE == 0){
-                map.push_back(newNode);
-            }
+         
 
         }
 
         
         // push_front Implementation 
         void push_front(Item data){
-
-           // New Node to Link 
-           Node<Item>* newNode = new Node<Item>(data);
           
-          // Link the new Node back to new Head 
-           newNode->back = head;
-           
-          // If Head not Empty link, previous frot to back
-           if( head != nullptr){
-            head->front = newNode;
-           }
-
-           //  Move the firs Node 
-           head = newNode;
-
-           // Increament Size 
-           __size++;
+          // Add Node after head
+          __addNode(head, data);
+          __size++;
 
         }
 
 
-        void at(size_t acessIndex){
+/////////////////////////////////SECTION: REMOVERS ///////////////////////////////////////
 
-            if (acessIndex < 0 || acessIndex > __size -1 ){
-                throw out_of_range("Out of range acess!");
+
+
+        // Clear operation
+        void clear() {
+
+            Node<Item>* temp = head->back;
+
+            while(!temp->isTail()){
+                temp = temp->back;
+                __removeNode(temp->front);
             }
 
-            size_t mapIndex = acessIndex / __KEYSIZE;
-            size_t offSet = acessIndex % __KEYSIZE ;
+        }
+
+
+        // Copy Assignment operators
+        List<Item>& operator=(const List<Item>& srcToCopy){
+            
+            // Recopy Guard
+            if (this == &srcToCopy){
+                return *this;
+            } 
+
+            // Clear Guard
+            this->clear();
+
+            // Temp
+            Node<Item>* temp = srcToCopy.head->back;
+
+            // Loop Copy
+            while(!temp->isTail()){
+
+                push_back(temp->data);
+                temp = temp->back;
+            }
+
+            // Reutrns Ref
+            return *this;
+
+
+        } 
+
+
+        // remove first Operator 
+        Item pop_front(){
+            
+            // Temp 
+            Item temp;
+            
+            // Get Head 
+            auto firstElement = getHead();
+
+            // Get data 
+            temp = firstElement->data;
+
+            // Remove first 
+            __removeNode(firstElement);
+
+            return temp;
 
 
         }
 
 
-    
+        
 
+/////////////////////////////////////SECTION: ACESSORS///////////////////////////////
+        
+        // Getters 
+        Node<Item>* getHead(){
 
-/////////////////////////////////////SECTION: ACESSORS////////////////////////
+            if (__size == 0){
+                throw std::logic_error("No head Exists! Size = 2");
+            }
+
+            return head->back;
+        }
+
+         // Getters 
+        Node<Item>* getTail(){
+
+            if (__size == 0){
+                throw std::logic_error("No Tail Exist! Size=0");
+            }
+
+            return tail->front;
+
+        }
 
         // Data Print from Head 
-        void print_head() const{
+        void print_head(std::ostream& out) const{
             
-            for(Node<Item>* currNode = head; currNode != nullptr ; currNode= currNode->back){
+            Node<Item>* temp = head->back;
 
-                cout << currNode->data << endl;
+            while(!temp->isTail()){
+
+                out <<  temp->data << std::endl; 
+                temp = temp->back;
+
             }
+
+            
         }
 
         // Data Print from tail
-        void print_tail() const{
+        void print_tail(std::ostream& out) const{
+            
+            auto temp = tail->front;
 
-            for(Node<Item>* currNode = tail; currNode != nullptr; currNode = currNode->front){
-                cout << currNode->data << endl;
+            while(!temp->isHead()){
+
+                out <<  temp->data << std::endl; 
+                temp = temp->front;
+
             }
+        }
+        
+        // << operator overload
+        friend std::ostream& operator<<(std::ostream& inStream, List& src){
 
+            src.print_head(inStream);
+            return inStream;
         }
 
 
-        // Size Accessor 
-        int getSize() const{
-            return __size;
-        }
-
-           // Get Head Node 
-        Node<Item>* getHead() const {
-            return head;
-        }
-
-        // Get Tail Node 
-        Node<Item>* getTail() const {
-            return tail;
-        }
-
-        // Fix Me -- Delete Me 
-        void print_map() const {
-
-            for(size_t i = 0; i < map.getSize() ; i++)
-
-                cout << map.at(i)->data << endl;
-            }
 };
 
 
 
 int main(){
-    
-    List<int> list;
 
-    for(int i =0 ; i< 100 ; i++){
-        list.push_back(i);
-    }
     
-    
-     
+    List<int> testList;
+
+
 
     return 0;
     
