@@ -1,9 +1,9 @@
 #include <iostream>
 #include <stdexcept>
-#include "../vector/pseudovector.h"
+#include "../sort/nlogn/mergesort.h"
 
 
-
+using namespace std;
 
 // Forward Decleration
 template<typename Item>
@@ -25,8 +25,8 @@ class Node{
         
         // Default Constructor 
         Node(){
-            index =INT16_MAX;
-            data = INT16_MAX;
+            index = INT8_MAX;
+            data= Item();
             front = nullptr;
             back = nullptr;
         }
@@ -80,7 +80,7 @@ class List{
         Node<Item>* head;
         Node<Item>* tail;
         size_t __size;
-        
+        bool __isSorted = true;
         
         // Linear Search Function
         Node<Item>* __search(Item data){
@@ -233,10 +233,13 @@ class List{
            // Add Node after tail 
             __addNode(tail->front, data);
             __size++;
-         
 
+             // Single is sorted
+            if (__size >1){
+                __isSorted = false;
+            }
+        
         }
-
         
         // push_front Implementation 
         void push_front(Item data){
@@ -244,9 +247,94 @@ class List{
           // Add Node after head
           __addNode(head, data);
           __size++;
+          
+            // Single is sorted
+            if (__size > 1){
+                __isSorted = false;
+            }
+        
+        
+        }
+
+        // Runtime Complexity O(nlogn) | space complexiy O(2n)
+        void sort(bool useThread = false){
+            
+            if (__size == 0){
+                throw std::logic_error("Empty list cannot be sorted!");
+            }
+
+            // Heap Allocation Array
+            auto toSort = new Item[__size];
+
+            // DummyHead for Head pointer 
+            auto dummyHead = getHead();
+
+            // data copy into array 
+            for (int i = 0 ; i < __size; i++){
+                
+                toSort[i] = dummyHead->data;
+                dummyHead = dummyHead->back;
+            }
+            
+            if (useThread){
+            // Do the threaded MergeSort 
+            threaded_mergesort::mergeSort<Item>(toSort, 0 , __size-1);
+            }
+            else{
+                mergesort::mergeSort<Item>(toSort, 0, __size-1);
+            }
+
+            dummyHead = getHead();
+            // Recopy data into the linked list
+            // data copy into array 
+            for (int i = 0 ; i < __size; i++){
+                
+                dummyHead->data = toSort[i];
+                dummyHead = dummyHead->back;
+            }
+            
+            __isSorted = true;
+
+            // Free the heap array
+            delete[] toSort;
 
         }
 
+        // Ordered Push 
+        void push_ordered(Item toPush){
+            
+            if (!__isSorted){
+                throw std::logic_error("Cannot add ordered to unsorted array");
+            }
+
+            
+            // Add ordered Condition
+            auto tempNode = head->back;
+            
+            //Add loop
+            while (!tempNode->isTail()){
+                
+                // Push Index
+                if (toPush < tempNode->data){
+                    __addNode(tempNode->front , toPush);
+                    __size++;
+                    return;
+                }
+                // Front Transversal
+                tempNode = tempNode->back;
+            }
+            
+            __addNode(tail->front, toPush);
+            __size++;
+            
+
+        }
+
+        //Operator Overload 
+        friend List<Item>& operator<<(List<Item>& refList , const Item& toAdd){
+            refList.push_back(toAdd);
+            return refList;
+        }
 
 /////////////////////////////////SECTION: REMOVERS ///////////////////////////////////////
 
@@ -313,16 +401,49 @@ class List{
 
         }
 
+        // remove Back Metod 
+        Item pop_back(){
+            
+             // Temp 
+            Item temp;
+            
+            // Get Head 
+            auto lastElement = getTail();
+
+            // Get data 
+            temp = lastElement->data;
+
+            // Remove last 
+            __removeNode(lastElement);
+
+            return temp;
+
+        }
+
+        //Remove Value 
+        bool pop_value(Item value){
+
+            auto toPop = __search(value);
+
+            if (toPop != nullptr){
+                __removeNode(toPop);
+                return true;
+            }
+            
+            return false;
+            
+            
+        } 
+
 
         
-
 /////////////////////////////////////SECTION: ACESSORS///////////////////////////////
         
         // Getters 
         Node<Item>* getHead(){
 
             if (__size == 0){
-                throw std::logic_error("No head Exists! Size = 2");
+                throw std::logic_error("No head Exists! Size = 0");
             }
 
             return head->back;
@@ -367,6 +488,8 @@ class List{
             }
         }
         
+        int getSize() const {return __size;}
+
         // << operator overload
         friend std::ostream& operator<<(std::ostream& inStream, List& src){
 
@@ -375,17 +498,10 @@ class List{
         }
 
 
+        bool isSorted(){
+            return __isSorted; 
+        }
+
+
 };
 
-
-
-int main(){
-
-    
-    List<int> testList;
-
-
-
-    return 0;
-    
-}
