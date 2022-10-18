@@ -35,10 +35,6 @@ public:
     }
 
      
-    // Copy constructer
-    __Node(Node&)
-
-
 
 
 
