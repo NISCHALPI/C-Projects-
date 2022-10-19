@@ -20,7 +20,7 @@ private:
     __Node* leftChild;
     __Node* rightChild;
     Item data;
-    bool ishead = false;
+
     
 
 
@@ -41,8 +41,7 @@ public:
 
 
 
-    // Leaf and Head 
-    bool isHead() const {return ishead;}
+    // Check Leaf
     bool isLeaf() const {return (leftChild == nullptr && rightChild==nullptr);}
 
     // single parent 

@@ -1,5 +1,9 @@
-#include <iostream>
+#ifndef __BST__LIB__
+#define __BST__LIB__
+
+// Incude Node class
 #include "node.h"
+
 
 
 ////////////////////////////////SECTION: BST CLASS////////////////////////////////////////////////////////
@@ -37,7 +41,7 @@ private:
     }
 
     //Insertion helper
-    __Node<int>* __insertNode(__Node<Item>* parentNode, __Node<Item>* toAdd){
+    __Node<Item>* __insertNode(__Node<Item>* parentNode, __Node<Item>* toAdd){
         
         // Base Case Linking 
         if (parentNode == nullptr){
@@ -107,7 +111,22 @@ private:
 
 
     //calc height 
-    int __getHeight() const ;
+    int __getHeight(__Node<Item>* currNode) const{
+
+        // Base case if head is null return -1
+        if (currNode == nullptr){
+            return -1;
+        }
+        else {
+            // Find left Height 
+            int leftHeight = 1 + __getHeight(currNode->leftChild);
+            // Find Right Height 
+            int rightHeight = 1 + __getHeight(currNode->rightChild);
+            // Reutrn max of both 
+            return (leftHeight >= rightHeight) ? leftHeight : rightHeight;
+        }
+
+    }
 
 
     // remove Node 
@@ -239,29 +258,13 @@ public:
 
     // getSize method 
     int getSize() const {return __size;}
+    
+    // Get item binary tree
+    Item getHead() const { return head->data;}
 
-
+    // Get Height 
+    Item getHeight() const { return __getHeight(head);}
 
 };
 
-
-
-int main(){
-
-    BST<int> myBst;
-
-    for(int i =0 ; i < 10 ; i++){
-
-        myBst <<  rand() % 20 ;
-
-    }
-
-    
-    // Error on head node 
-    
-    myBst.inOrder();
-  
-
-
-    return 0;
-}
+#endif
