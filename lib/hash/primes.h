@@ -44,21 +44,7 @@ int __getHigherPrime(int num){
 }   
 
 int __getHigherPrime(int num, int minSpacing){
-    
-    // atleast must be greater than equal this
-    int atLeast = num + minSpacing;
-
-    // Loop
-    while (true){
-        
-        num = __getHigherPrime(num);
-        if(num > atLeast){
-            break;
-        }
-
-    }
-
-    return num;
+    return __getHigherPrime(minSpacing + num);
 }
 
 
