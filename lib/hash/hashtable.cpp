@@ -2,6 +2,11 @@
 #include "primes.h"
 #include "../list/list.h"
 
+
+
+
+
+
 // Define rehashing capacity
 #ifndef __HASH_CAPACITY__
 #define __HASH_CAPACITY__ 47
@@ -81,7 +86,7 @@ private:
         auto tempArray = __array;
         
         // New Prime Number Capacity
-        __capacity = __getHigherPrime(__capacity, 2*__capacity);
+        __capacity = __getHigherPrime(__capacity, 2 * __capacity);
 
 
         // new Increased arrat
@@ -198,6 +203,14 @@ public:
     int getCapacity() const {return __capacity;}
     int getMaxBucket() const {return __maxBucketLoad;}
 
+    // Find method
+    bool search(Item  data){
+        int key = this->hashFunction(data) % __capacity;
+        return __array[key].__bucketList.search(data);
+
+    }
+
+
 };
 
 
@@ -212,14 +225,14 @@ int main(){
 
     HashTable<int> myHash(hashFunc);
 
-    for(int i = 0 ; i < 100000000 ; i++){
-        myHash.hash(rand() % 100001);
+    for(int i = 0 ; i < 10000 ; i++){
+        myHash.hash(rand() % 1000);
     }
 
     std::cout << "Capacity = "<<  myHash.getCapacity() << std::endl;
     std::cout << "Size = "<<  myHash.getSize() << std::endl;
     std::cout << "Bucket Size = "<<  myHash.getMaxBucket() << std::endl;
-   
+    myHash.print();
+    std::cout << std::boolalpha << myHash.search(22) << std::endl;
 
 }
-

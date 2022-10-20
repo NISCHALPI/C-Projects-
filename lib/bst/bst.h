@@ -15,13 +15,13 @@ class BST{
 private:
 
     //head node
-    __Node<Item>* head = nullptr;
+    __Node<Item>* head =nullptr ;
         
     //size of tree
-    size_t __size = 0;
+    size_t __size = 0 ;
 
     // Dublicate key 
-    bool useDublicat = true;
+    bool useDublicat= true ;
 
 
     
@@ -29,16 +29,42 @@ private:
 ///////////////////////////////////////////////////////////////SECTION:PRIVATE HELPER FUCNTIOSN///////////////////////////////////////
 
     // Mid Order Print 
-    void __midOrder(__Node<Item>* head) const {
+    void __midOrder(__Node<Item>* head, std::ostream& stream) const {
         if (head == nullptr){
             return;
         }
        
-        __midOrder(head->leftChild);
-         std::cout << head->data << " " << std::endl;
-        __midOrder(head->rightChild);
+        __midOrder(head->leftChild, stream);
+         stream << head->data << " ";
+        __midOrder(head->rightChild, stream);
         
     }
+
+    // Pre Order Print 
+    void __preOrder(__Node<Item>* head, std::ostream& stream) const {
+        if (head == nullptr){
+            return;
+        }
+
+        stream << head->data << " ";
+        __preOrder(head->leftChild, stream);
+        __preOrder(head->rightChild, stream);
+        
+    }
+
+      //  Post Order 
+    void __postOrder(__Node<Item>* head, std::ostream& stream) const {
+        if (head == nullptr){
+            return;
+        }
+    
+        __postOrder(head->leftChild , stream);
+        __postOrder(head->rightChild, stream);
+        stream << head->data << " ";
+        
+    }
+
+
 
     //Insertion helper
     __Node<Item>* __insertNode(__Node<Item>* parentNode, __Node<Item>* toAdd){
@@ -179,12 +205,128 @@ private:
     }
 
 
-    // pop branch 
-    bool __popBranch(Item data);
+    // clear recursive, like a postorder clear
+    // Deletes a whole branch 
+    __Node<Item>* __clear(__Node<Item>* toRemove){
+        
+        // If empty or nullptr
+        if(toRemove == nullptr){
+            return nullptr;
+        }
 
+
+        // Base case if leaf 
+        if (toRemove->isLeaf()){
+            
+            // If leaf then remove  
+            delete toRemove;
+            
+            //Decrease the size  
+            __size--;
+
+            return nullptr;
+
+        }
+
+        else{
+
+            // Remove  Left and Right
+            toRemove->leftChild = __clear(toRemove->leftChild);
+            toRemove->rightChild = __clear(toRemove->rightChild);
+
+            // clear Itself after remove  
+            return __clear(toRemove);
+
+
+        }
+
+    } 
+    
+    __Node<Item>* __deepCopy(__Node<Item>* toAdd, __Node<Item>* currNode){
+        
+        if (toAdd != nullptr){
+            throw std::logic_error("Memory Leak Possible! Pass empty pointer for deepCopy");
+        }
+
+        // Case for Leaf Pointer ptr Nothing
+        if (currNode == nullptr){
+            return nullptr;
+        }
+        else{
+
+            //New Node linking before Preorder
+            toAdd = new __Node<Item>(currNode->data);
+
+            // Pre-Order TheData 
+            toAdd->leftChild = __deepCopy( toAdd->leftChild,currNode->leftChild);
+            toAdd->rightChild = __deepCopy( toAdd->rightChild ,currNode->rightChild);
+            
+            return toAdd;
+            
+        }
+
+    }
 
 public:
     
+
+//////////////////////////////////////////////////////////////SECTION:RULES////////////////////////////////////////////////////////////
+
+// Destructer
+~BST(){    
+        //Implement Clear and Pass head 
+        __clear(head);
+    
+}
+
+// Default Constructer
+BST(){
+    
+    //head
+    __Node<Item>* head = nullptr;
+        
+    //size of tree
+    size_t __size = 0;
+
+    // Dublicate key 
+    bool useDublicat = true;
+
+}
+
+
+// Copy Constructer 
+BST(BST& rhs){
+    // Deep copy this shit 
+    this->head = __deepCopy(this->head, rhs.head);
+
+    // Copy Size 
+    this->__size = rhs.__size;
+
+    // Copy dublicate keys setting
+    this->useDublicat = rhs.useDublicat;
+    
+}
+
+// Copy Assignment Operator 
+BST<Item>& operator=(const BST<Item> rhs){
+
+    // clear The first one 
+    this->head = this->__clear(this->head);
+
+    //Deep Copy the rhs with current 
+    this->head = __deepCopy(this->head, rhs.head);
+    
+    // Copy Size 
+
+    this->__size = rhs.__size;
+
+    // Copy dublicate keys setting
+    this->useDublicat = rhs.useDublicat;
+    
+    return *this;
+
+}
+
 
 ///////////////////////////////////////////////////////////////SECTION: MUTATORS///////////////////////////////////////////////////////
     
@@ -208,11 +350,6 @@ public:
         }
         
         
-    }
-
-    // In order Print 
-    void inOrder() const {
-        __midOrder(this->head);
     }
 
     // remove Node 
@@ -249,6 +386,27 @@ public:
         
     }
 
+    // Clear Function 
+    bool clear(__Node<Item>* node = nullptr) {
+        
+        try {
+
+        if (node!=nullptr){
+        // Clears everything
+        node = __clear(node);
+        }
+        else {
+            head = __clear(head);
+        }
+        }
+        catch(...){
+            return false;
+        }
+
+        return true;
+        
+        
+    }
 
     // Add operator overload 
     friend BST<Item>& operator<<(BST<Item>& addObj ,const Item& data){
@@ -256,6 +414,8 @@ public:
         return addObj;
     } 
 
+//////////////////////////////////////////////////////////SECTION: ACCESSEORS////////////////////////////////////////////////////////////////
+    
     // getSize method 
     int getSize() const {return __size;}
     
@@ -265,6 +425,29 @@ public:
     // Get Height 
     Item getHeight() const { return __getHeight(head);}
 
+    
+    // In order Print 
+    void inOrder() const {
+        __midOrder(this->head, std::cout);
+        std::cout << std::endl;
+    }
+
+    // Pre Order Print
+    void preOrder() const {
+        __preOrder(this->head, std::cout);
+        std::cout << std::endl;
+    }
+
+    // Post Order
+    void postOrder() const {
+        __postOrder(this->head, std::cout);
+        std::cout << std::endl;
+    }
+
+    // Is empty 
+    bool isEmpty() const {
+        return (head==nullptr) ? true: false ;
+    }
 };
 
 #endif

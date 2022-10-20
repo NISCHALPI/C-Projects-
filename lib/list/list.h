@@ -469,10 +469,11 @@ class List{
 
             while(!temp->isTail()){
 
-                out <<  temp->data << std::endl; 
+                out <<  temp->data << " "; 
                 temp = temp->back;
 
             }
+            out << std::endl;
 
             
         }
@@ -499,11 +500,27 @@ class List{
             return inStream;
         }
 
-
+        // Sorted check
         bool isSorted(){
             return __isSorted; 
         }
 
+        bool search(Item data) {
+            try{
+                auto searchPtr = __search(data);
+            
+                if ( searchPtr == nullptr){
+                return false;
+                }
+            }
+
+            catch(std::logic_error){
+                return false;
+            }
+
+            return true;
+            
+        }
 
 };
 
