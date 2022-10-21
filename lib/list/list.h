@@ -67,6 +67,9 @@ class Node{
             return data;
         }
 
+        Node<Item>* getNext() { return back;}
+        Node<Item>* getPrevious() { return front;}
+
         // Friend                --- Template Parameter has to  be different
        template<typename Ref>
        friend class List;
