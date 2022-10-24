@@ -1,0 +1,79 @@
+20.7 P4: Hash Tables and People
+
+
+#################################################################################################################
+Overview
+
+You will write a program that will read a tab delimited text file and store the data in a queryable hash table.
+
+Tab Delimited Files
+The input file is a tab delimited text file representing a table. Each row (represented by a line '\n') represents a person with each column (separated by tabs '\t') being the value of a particular field. The first row contains the column names. There will always be 8 columns, and the columns will always be in the order listed below. You can store all values from the file as strings. You can view the example .txt file in VS Code or Excel; a snippet is below. When creating your own test cases, use *nix line endings (LF, not CRLF) and be sure to have an empty newline at the end of the file.
+
+
+
+
+The 8 column names, which will always be in this order, are as follows:
+
+Id
+FirstName
+LastName
+Email
+Phone
+City
+State
+PostalCode
+
+
+#################################################################################################################
+
+
+DATA FORMAT:
+
+
+Id    FirstName   LastName    Email   Phone   City    State   PostalCode
+1    Blythe  Sawood  bsawood0@vinaora.com    309-770-8195    Carol Stream    Illinois    60158
+2    Erv Attwoul eattwoul1@walmart.com   240-394-7643    Frederick   Maryland    21705
+3    Elwood  Canwell ecanwell2@4shared.com   404-376-8669    Atlanta Georgia 30368
+...
+54    Esdras  Treby   etreby1h@taobao.com 209-874-0096    Stockton    California  95298
+55    Taber   Snuggs  tsnuggs1i@stanford.edu  713-295-3367    Houston Texas   77206
+
+
+#################################################################################################################
+
+COMMAND LINE ARGS:
+
+The program accepts 3 command-line arguments:
+
+	filename - the name of the tab delimited input file
+	table_size - the size of the hash table to be created
+	key - the column name used as a key to store the person in the table
+
+
+
+#################################################################################################################
+
+Hash Table Details:
+
+	-Use open addressing with quadratic probing as the collision resolution strategy.
+	-Use djb2 hash function.
+	-Mapping Function: Use h(key) = djb2(key) % size to map the string key to an index in the table.
+	-Collision Resolution: Use quadratic probing when there is a collision as shown in the book.
+	
+################################################################################################################
+
+Hash Key:
+
+The key used for inserting people into the hash table is determined by a command-line argument. It will be one of the column names.
+
+
+Because of open addressing, each index of the hash table can store only one key. Keys are not guaranteed to be unique (suppose key == "State", multiple people have the same State value), so the hash table needs to support storing multiple people with the same key per index.
+
+#################################################################################################################
+
+Interface Operations
+print - print all indices in the hash table that are occupied using the format in the examples.
+<index>: key (#people_in_key),
+lookup <key> - print all people with the key using the format in the examples.
+
+################################################################################################################

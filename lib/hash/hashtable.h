@@ -1,4 +1,20 @@
-#include <iostream>
+#ifndef __HASHTABLE__LIB__
+#define __HASHTABLE__LIB__
+
+
+//
+// hashtable.h: HashTable Calss 
+//
+// Author:  Nischal Bhattarai
+//     
+//
+// Completion Date: 10/22/2022
+// 
+// Features: No Data Size Needed, Auto Rehashable, Optimized Primes Numbers for Mapping 
+//
+ 
+
+// Required Inputs 
 #include "primes.h"
 #include "../list/list.h"
 
@@ -6,15 +22,16 @@
 
 // Define rehashing capacity
 #ifndef __HASH_CAPACITY__
-#define __HASH_CAPACITY__ 47 
+#define __HASH_CAPACITY__ 53
 #define __HASH_LIMIT__ 8 
 #endif
 
 
 
 
-
+// Chained HashTable Name Space 
 namespace chainedHash {
+
 
 // Node Class HashTable
 template <typename Item>
@@ -48,8 +65,13 @@ class __HashNode{
 };
 
 
-// Uses Modulus Hash Function
-// HashTables Class
+/**
+ * @brief Chained HashTable Class with Linked List Buckets 
+ *        Automatic Rehash with prime numbers 
+ *        
+ * 
+ * @tparam Pass a Hash Function to the constructer such that int func(object) 
+ */
 template <typename Item>
 class HashTable{
 
@@ -337,6 +359,16 @@ public:
 
     }
 
+    void clear() {
+
+        // Clear the array and do new alloc
+        this->__clear();
+
+        // New capacity alloc 
+        __array = new __HashNode<Item>[__capacity];
+
+
+    }
 
     //////////////////////////////////////////////////////////////SECTIONS: OVERLOADS////////////////////////////////////////////////////////
     
@@ -357,45 +389,4 @@ public:
 
 };
 
-
-
-    
-
-
-
-
-
-
-int hashFunc(int a) {return a;}
-
-
-
-int main(){
-
-    chainedHash::HashTable<int> myHash(hashFunc);
-
-    for(int i = 0 ; i < 10 ; i++){
-        myHash << rand() % 10;
-    }
-
-    std::cout << "Capacity = "<<  myHash.getCapacity() << std::endl;
-    std::cout << "Bucket Size = "<<  myHash.getBucketSize() << std::endl;
-    std::cout << "Max Bucket Length = "<<  myHash.getMaxBucket() << std::endl;
-    std::cout << "Size = "<<  myHash.getSize() << std::endl;
-    
-    std::cout << myHash;
-
-    chainedHash::HashTable<int> secondHash(myHash);
-
-    secondHash = myHash;
-    
-     std::cout << "Capacity = "<<  secondHash.getCapacity() << std::endl;
-    std::cout << "Bucket Size = "<<  secondHash.getBucketSize() << std::endl;
-    std::cout << "Max Bucket Length = "<<  secondHash.getMaxBucket() << std::endl;
-    std::cout << "Size = "<<  secondHash.getSize() << std::endl;
-    
-    std::cout << secondHash;
-
-
-
-}
+#endif 

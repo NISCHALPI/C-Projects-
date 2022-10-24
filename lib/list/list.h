@@ -86,6 +86,10 @@ class List{
         Node<Item>* tail;
         size_t __size;
         bool __isSorted = true;
+
+        // Error Val
+        Item error = Item();
+
         
         // Linear Search Function
         Node<Item>* __search(Item data){
@@ -508,20 +512,22 @@ class List{
             return __isSorted; 
         }
 
-        bool search(Item data) {
+        Item& search(Item data) {
             try{
                 auto searchPtr = __search(data);
             
                 if ( searchPtr == nullptr){
-                return false;
+                return error;
                 }
+
+                return searchPtr->data;
             }
 
             catch(std::logic_error){
-                return false;
+                return error;
             }
 
-            return true;
+            return error;
             
         }
 
