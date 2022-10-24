@@ -1,19 +1,8 @@
 # C++ Projects 
 
-
-READ OBJECTIVE.TXT WITHIN EACH PROJECT FOLDER TO KNOW MORE ABOUT PROJECT TARGETED GOALS.
-
-projectFirst :- 
-
-Finding Leaf and Non-Leaf Network Identifier from a text file. 
-Read the questions from Objective.txt within the projectFirst directory.
+## ***Lib Directory***
+The lib directory contains basic data stuctures and algorithms like BST, hash tables, linked list, threaded mergesort and quicksort etc which I wrote primarily to do project assigned in my CS101 class. I designed them to be resuable and customizable in future use. 
 
 
-projectSecond :-
-
-Sorting and Juxtaposition word and strings using mergesort and quicksort.
-
-
-projectThird :-
-
-Contact List using Linked List data type
+## ***Projects***
+Each project were assigned to me during my CS class. Each directory contains the project objective and implementation.
