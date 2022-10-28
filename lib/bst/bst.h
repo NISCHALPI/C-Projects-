@@ -3,8 +3,8 @@
 
 // Incude Node class
 #include "node.h"
-
-
+#include "../list/list.h"
+#include "../list/queue.h"
 
 ////////////////////////////////SECTION: BST CLASS////////////////////////////////////////////////////////
 
@@ -63,6 +63,63 @@ private:
         stream << head->data << " ";
         
     }
+
+      //  Post Order 
+    List<Item> __levelOrder(__Node<Item>* head)  {
+        
+        //Inti Data Types
+        List<Item> levelList ;
+        Queue<__Node<Item>*> levelQueue;
+
+        // Empty Head 
+        if (head==nullptr){
+            return levelList;
+        }
+
+        // Add Head to Queue 
+        levelQueue << head;
+
+        // Temp pointer 
+        __Node<Item>* temp;
+
+        // While To Iterate Over a tree
+        while (true){
+
+            // Break if Empty
+            if(levelQueue.isEmpty()){
+                break;
+            }
+
+            // Dequeue the level Queue
+            auto temp = levelQueue.dequeue();
+
+            // If nullptr then recheck
+            if (temp == nullptr){
+                continue;
+            }
+
+            // Else Add To level Stack
+            levelList << temp->data;
+            
+            //Add to level Queue 
+            levelQueue << temp->leftChild;
+            levelQueue << temp->rightChild;
+
+        }
+
+        // Return the final Stacks
+        return levelList;
+
+
+
+
+
+
+    }
+
+       
+        
+    
 
 
 
@@ -442,6 +499,18 @@ BST<Item>& operator=(const BST<Item> rhs){
     void postOrder() const {
         __postOrder(this->head, std::cout);
         std::cout << std::endl;
+    }
+
+    // Level Order 
+    void levelOrder() {
+
+        // Level order Stack Data 
+        auto stack = __levelOrder(this->head);
+
+        // Print level Order 
+        std::cout << stack;
+
+        
     }
 
     // Is empty 
