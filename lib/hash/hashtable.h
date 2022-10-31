@@ -339,7 +339,7 @@ public:
     bool remove(Item data){
 
         // Index = key % capacity
-        int index = hashFunction(data) & __capacity;
+        int index = hashFunction(data) % __capacity;
 
         try {
             
@@ -384,6 +384,8 @@ public:
             return out;
     }
 
+    template <typename keyType , typename valType>
+    friend class HashMap;
 };
 
 
