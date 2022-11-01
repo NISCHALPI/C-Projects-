@@ -6,19 +6,6 @@
 
 
 
-template <typename Item>
-using HashMap = chainedHash::HashTable<Item>;
-
-
-// Char to Int Func
-int __chartoint(char c){ return int(c);}
-
-
-
-
-
-
-
 
 
 template <typename Item>
@@ -31,8 +18,8 @@ private:
 
     // String To Process 
     std::string __initSting;
-    
-    
+
+
     
 
 
