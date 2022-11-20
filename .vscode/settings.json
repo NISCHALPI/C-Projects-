@@ -49,6 +49,8 @@
         "sstream": "cpp",
         "thread": "cpp",
         "typeinfo": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "queue": "cpp",
+        "stack": "cpp"
     }
 }

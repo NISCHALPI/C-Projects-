@@ -16,7 +16,8 @@ class BST;
 
 template <typename Item>
 class __Node{
-private:
+
+protected:
     __Node* leftChild;
     __Node* rightChild;
     Item data;

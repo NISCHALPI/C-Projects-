@@ -384,8 +384,7 @@ public:
             return out;
     }
 
-    template <typename keyType , typename valType>
-    friend class HashMap;
+    
 };
 
 

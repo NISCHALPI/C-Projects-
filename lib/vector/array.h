@@ -1,5 +1,5 @@
-#ifndef __PSEUDOVECTOR__
-#define __PSEUDOVECTOR__
+#ifndef __ARRAY_LIB__
+#define __ARRAY_LIB__
 
 
 
@@ -11,7 +11,7 @@
 
 
 template <typename Item>
-class PseudoVector{
+class Array{
 
     private:
             Item* __array ;
@@ -22,11 +22,22 @@ class PseudoVector{
 
     public:
     
-    // Rule of 3 Inmplementation 
-    PseudoVector();
-    ~PseudoVector();
-    PseudoVector(const PseudoVector<Item>& toCopy);
-    PseudoVector<Item>& operator=( const PseudoVector<Item>& toCopy);
+    // Rule of 3 Inmplementation
+
+    //Default Constructer 
+    Array();
+
+    // Size Constructer
+    Array(int initSize);
+
+    // Destructer
+    ~Array();
+
+    // CopyConst 
+    Array(const Array<Item>& toCopy);
+    
+    // Copy Assign 
+    Array<Item>& operator=( const Array<Item>& toCopy);
 
 
     // SECTION: ACCECORS 
@@ -57,16 +68,27 @@ class PseudoVector{
     // Find Function 
     int find(Item toFind);
 
-    //Pseudovector
-    void unique(PseudoVector& temp);
+    //Array
+    void unique(Array& temp);
 
+    // Pop Last 
+    Item pop_back();
+
+     // Insert Operator Overload 
+    Array<Item>& operator<<(Item rhs);
+
+    // Print Operator Overload
+    template <typename Ref> 
+    friend std::ostream& operator<<(std::ostream& stream , Array<Ref>& useArr );
+
+   
 };
 
 
 
 // Copy Constructer 
 template <typename Item>
-PseudoVector<Item>::PseudoVector(const PseudoVector<Item>& objtoCopy){
+Array<Item>::Array(const Array<Item>& objtoCopy){
 
 // Copy Defaults 
 this->__block = objtoCopy.__block;
@@ -89,7 +111,7 @@ for(int i=0; i< __size; i++){
 
 // Equality operator 
 template <typename Item>
-PseudoVector<Item>& PseudoVector<Item>::operator=(const PseudoVector<Item>& objtoCopy){
+Array<Item>& Array<Item>::operator=(const Array<Item>& objtoCopy){
 
 // Copy Defaults 
 this->__block = objtoCopy.__block;
@@ -115,8 +137,8 @@ return *this ;
 
 
 template <typename Item>
-PseudoVector<Item>::PseudoVector(){
-    __block = 100;
+Array<Item>::Array(){
+    __block = 1;
 
     __array = new Item[__block];
 
@@ -129,12 +151,24 @@ PseudoVector<Item>::PseudoVector(){
 }
 
 
+template <typename Item>
+Array<Item>::Array(int size){
+    __block = size ;
+    __array = new Item[size];
+    __size = 0;
+    __isSorted = false;
+
+
+
+}
+
+
 
 
 
 // Destructor
 template <typename Item>
-PseudoVector<Item>::~PseudoVector(){
+Array<Item>::~Array(){
 
 
 delete[] __array;
@@ -147,7 +181,7 @@ delete[] __array;
 
 // at Implementation
 template <typename Item>
-Item PseudoVector<Item>::at(int index) const{
+Item Array<Item>::at(int index) const{
 
 if ( index > __size -1 || index < 0){
     std::cout << "Out of Index!" << std::endl;
@@ -163,7 +197,7 @@ else{
 
 // back Inplementation
 template <typename Item>
-Item PseudoVector<Item>::back() const{
+Item Array<Item>::back() const{
 
     // Returns last element 
     return __array[__size -1];
@@ -174,7 +208,7 @@ Item PseudoVector<Item>::back() const{
 
 // Check if __array is already Sorted
 template <typename Item>
-bool PseudoVector<Item>::__sortGuard(){
+bool Array<Item>::__sortGuard(){
     
     //Assumes Already Sorted
     bool __state = true ;
@@ -208,7 +242,7 @@ bool PseudoVector<Item>::__sortGuard(){
 
 //MergeSort = true || QuickSort == false
 template <typename Item>
-void PseudoVector<Item>::sort(bool useMergesort , bool useThread ){
+void Array<Item>::sort(bool useMergesort , bool useThread ){
 
 // Empty guard
 if(__size == 0 || __size == 1){
@@ -259,9 +293,11 @@ return ;
 
 
 
+
+
 //// Logistic Pushback implementation
 template <typename Item>
-void PseudoVector<Item>::push_back(Item itemRef){
+void Array<Item>::push_back(Item itemRef){
 
 //Size increament 
 __size++;
@@ -271,12 +307,11 @@ __size++;
 // If block reached realloc other wise do nothing 
 if ( __size > __block){
 
-
     
+    //Amortized Mem Ascension
+    __block = 2 * __block ;
     
-    //Logarithmic memory assencion model 
-    __block = (log10(__block)) * __block ;
-    
+    std::cout << "Increasing Size to " << __block << std::endl; 
     // New Heap Memory
     Item* __temp = new Item[__block];
 
@@ -316,11 +351,51 @@ if (__isSorted){
 }
 
 
+template <typename Item>
+Item Array<Item>::pop_back(){
+
+// Decrease the size
+__size--;
+
+// Store the item 
+auto retVar = __array[__size];
+
+// Re-Size condition 
+if ( __size <= (__block/4)){
+
+// Half the block
+__block = __block / 2 ;
+
+std::cout << "Decreasing Size to " << __block << std::endl; 
+
+// Create a size of half 
+auto temp = new Item[__block];
+
+// Copy data 
+for (int i= 0; i < __size ; i++){
+
+    temp[i] = __array[i];
+}
+
+// Mem free 
+delete[] __array;
+
+// Repoint 
+__array = temp;
+
+
+
+}
+
+return retVar;
+
+
+}
 
 
 // Find implementation 
 template <typename Item>
-int PseudoVector<Item>::find(Item toFind){
+int Array<Item>::find(Item toFind){
 
     // If Not Sorted, do linear search
     if (!__isSorted){
@@ -334,7 +409,6 @@ int PseudoVector<Item>::find(Item toFind){
         return -1;
     }
     else{
-        
         // Do to Binary Search
         return binary_search::binarySearch(__array , toFind , 0 , __size -1);
     }
@@ -346,9 +420,9 @@ int PseudoVector<Item>::find(Item toFind){
 
 
 
-// Accepts a empty pseudovector and fills it with qnique items of current object 
+// Accepts a empty Array and fills it with qnique items of current object 
 template <typename Item>
-void PseudoVector<Item>::unique(PseudoVector<Item>& temp){
+void Array<Item>::unique(Array<Item>& temp){
 
     // Add first 
     temp.push_back(__array[0]);
@@ -391,7 +465,24 @@ void PseudoVector<Item>::unique(PseudoVector<Item>& temp){
 }
 
 
+template <typename Item>
+std::ostream& operator<<(std::ostream& stream , Array<Item>& useArr ){
 
+
+for (int i =0 ; i < useArr.__size ; i++){
+    stream << useArr.__array[i] << std::endl;    
+}
+
+return stream;
+
+}
+
+template <typename Item>
+Array<Item>& Array<Item>::operator<<(Item rhs){
+     
+     this->push_back(rhs);
+     return *this;
+}
 
 ///////////////////////////////////////////////////////END OF CLASS////////////////////////////////
 
